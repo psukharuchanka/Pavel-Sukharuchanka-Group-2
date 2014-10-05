@@ -24,7 +24,8 @@ import org.apache.log4j.Logger;
 public class JarClassLoader extends ClassLoader {
 	static final Logger logger = Logger.getLogger(JarClassLoader.class);
 		
-	private static HashMap<String, Class> cache = new HashMap<String, Class>(); 
+	//private static HashMap<String, Class> cache = new HashMap<String, Class>(); 
+	private HashMap<String, Class> cache = new HashMap<String, Class>();
 	
 	private String dirPath = "d:/test";
 	
@@ -75,8 +76,8 @@ public class JarClassLoader extends ClassLoader {
 	            }
 			}
 		} catch(IOException ioe) {
-			logger.error("Can't define class ", ioe);
-		}
+			throw new ClassNotFoundException("Can not load class " + name, ioe);
+		} 
 		return null;
 	}
 	

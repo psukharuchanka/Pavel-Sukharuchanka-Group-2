@@ -28,8 +28,6 @@ public class Main {
 		
 		try {
 			do {
-				//System.out.println("[1] load functionality");
-				//System.out.println("[2] exit");
 				logger.info("[1] load functionality");
 				logger.info("[2] exit");
 				choice = scanner.nextInt();
@@ -54,7 +52,6 @@ public class Main {
 						}
 						break;
 					case 2:
-						//System.out.println("----------------------");
 						logger.info("----------------------");
 						break;			
 				}
