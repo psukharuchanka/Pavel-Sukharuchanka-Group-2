@@ -1,0 +1,10 @@
+Application should have 3 layer:
+1. User Interface Layer ;
+2. Domain Layer (Business layer) ;
+3. Data layer;
+
+Domain model of this application will consist of a single domain - 'Bank'.
+
+Anticorruption Layer - will be responsible for bringing the source interface to the application interface. (can be as part of validation).
+
+Open Host Service - I guess it is not needed in this application (it is simple). It has sense to use it if we have additional domain..
