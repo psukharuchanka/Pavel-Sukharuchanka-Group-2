@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>by.kino.jmp</groupId>
+		<artifactId>cinema</artifactId>
+		<version>1.0</version>
+	</parent>
+	<artifactId>cinemaEar</artifactId>
+	<version>1.0</version>
+	<name>cinemaEar</name>
+	<packaging>ear</packaging>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<modules>
+						<webModule>
+							<groupId>by.kino.jmp</groupId>
+							<artifactId>cinemaWeb</artifactId>
+							<bundleFileName>cinemaWeb.war</bundleFileName>
+							<contextRoot>/web</contextRoot>
+						</webModule>
+						<ejbModule>
+							<groupId>by.kino.jmp</groupId>
+							<artifactId>cinemaEjb</artifactId>
+							<bundleFileName>cinemaEjb.jar</bundleFileName>
+						</ejbModule>
+					</modules>
+					<displayName>cinema Ejb Project</displayName>
+					<generateApplicationXml>true</generateApplicationXml>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>cinemaEar</finalName>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>by.kino.jmp</groupId>
+			<artifactId>cinemaEjb</artifactId>
+			<version>1.0</version>
+			<type>ejb</type>
+		</dependency>
+		<dependency>
+			<groupId>by.kino.jmp</groupId>
+			<artifactId>cinemaWeb</artifactId>
+			<version>1.0</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+</project>

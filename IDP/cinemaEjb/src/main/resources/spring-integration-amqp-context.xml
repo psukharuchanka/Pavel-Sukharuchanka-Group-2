@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+		http://www.springframework.org/schema/integration/amqp http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/jms http://www.springframework.org/schema/integration/jms/spring-integration-jms-2.1.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<util:properties id="qEnvironment">
+		<prop key="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</prop> 
+		<prop key="java.naming.provider.url">tcp://localhost:61616</prop> 
+    </util:properties>
+
+	<int:channel id="integration.cluster.heartbeat" />
+
+	<jee:jndi-lookup id="connectionFactory"
+		jndi-name="ConnectionFactory"
+		environment-ref="qEnvironment" />
+
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="defaultDestinationName" value="MyQueue" />
+	</bean>
+
+	<bean id="controlBusJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="defaultDestinationName" value="ControlBusQueue" />
+	</bean>
+
+	<int-jms:inbound-channel-adapter id="inboundAdapter"
+		channel="controlbus-managed-p2p-pollable-channel"
+		jms-template="jmsTemplate">
+		<int:poller fixed-rate="6000" />
+	</int-jms:inbound-channel-adapter>
+
+	<int-jms:inbound-channel-adapter id="controlBusAdapter"
+		channel="control-channel"
+		jms-template="controlBusJmsTemplate">
+		<int:poller fixed-rate="6000" />
+	</int-jms:inbound-channel-adapter>
+
+	<int:channel id="controlbus-managed-p2p-pollable-channel" />
+
+	<int:publish-subscribe-channel id="controlbus-managed-pub-sub-channel" />
+
+	<int:channel id="control-channel" />
+
+	<int:control-bus input-channel="control-channel" />
+</beans>

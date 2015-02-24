@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xmlns:jms="http://www.springframework.org/schema/jms" xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+		http://www.springframework.org/schema/integration/amqp http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/jms http://www.springframework.org/schema/integration/jms/spring-integration-jms-2.1.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- A reference to the org.springframework.amqp.rabbit.connection.ConnectionFactory -->
+	<rabbit:connection-factory id="connectionFactory" />
+
+	<rabbit:admin connection-factory="connectionFactory" />
+
+	<int-amqp:inbound-channel-adapter id="inboundAdapter" acknowledge-mode="AUTO"
+		channel="controlbus-managed-p2p-pollable-channel" queue-names="MyQueue"
+		connection-factory="connectionFactory" 
+		error-channel="errorChannel"/>
+
+	<int-amqp:inbound-channel-adapter id="controlBusAdapter" acknowledge-mode="AUTO"
+		channel="control-channel" queue-names="ControlBusQueue"
+		connection-factory="connectionFactory" 
+		error-channel="errorChannel"/>
+
+	<int:channel id="controlbus-managed-p2p-pollable-channel" />
+
+	<int:publish-subscribe-channel id="controlbus-managed-pub-sub-channel" />
+
+	<int:channel id="control-channel" />
+
+	<int:control-bus input-channel="control-channel" />
+	
+	<int:channel id="errorChannel" />
+	
+</beans>

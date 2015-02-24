@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xmlns:int-xml="http://www.springframework.org/schema/integration/xml"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+		http://www.springframework.org/schema/integration/amqp http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.1.xsd
+		http://www.springframework.org/schema/integration/xml http://www.springframework.org/schema/integration/xml/spring-integration-xml.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<int:bridge input-channel="controlbus-managed-p2p-pollable-channel"
+		output-channel="controlbus-managed-pub-sub-channel" />
+
+	<int:service-activator input-channel="controlbus-managed-pub-sub-channel"
+		id="serviceActivator1" ref="serviceActivator1Bean" method="logXml" />
+
+	<int:service-activator input-channel="controlbus-managed-pub-sub-channel"
+		id="serviceActivator2" ref="serviceActivator2Bean" method="logXml" />
+
+	<bean id="serviceActivator1Bean"
+		class="by.kino.jmp.amqp.Subscriber1ServiceActivator">
+	</bean>
+
+	<bean id="serviceActivator2Bean"
+		class="by.kino.jmp.amqp.Subscriber2ServiceActivator">
+	</bean>
+</beans>
